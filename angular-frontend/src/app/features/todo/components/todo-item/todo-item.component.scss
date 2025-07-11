@@ -1,0 +1,56 @@
+.todo-item__card {
+    margin-bottom: 0.5rem;
+
+    &-contents {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        &-details {
+            p, h4 {
+                margin: 0;
+            }
+        }
+
+        &-title {
+            display: flex;
+            gap: 1rem;
+            margin-block-end: 0.25rem;
+        }
+
+        &-badge {
+            background-color: rgba(0,0,255, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+        }
+
+        &-user {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #7b7a7a;
+
+            mat-icon {
+                font-size: 1.25rem;
+            }
+        }
+    }
+
+    &-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.completed {
+    h4 {
+        text-decoration: line-through;
+    }
+}

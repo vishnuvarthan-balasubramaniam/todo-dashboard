@@ -1,0 +1,20 @@
+<div class="todo-header">
+    <h1>Todo Dashboard</h1>
+    <button mat-button="filled" class="todo-header__add" (click)="addTodo()">
+        <mat-icon>add</mat-icon>
+        Add Todo
+    </button>
+</div>
+<div class="todo-filter">
+    <mat-chip-set>
+        <mat-chip selectable class="filter-chip" [highlighted]="filterSignal() === 'all'" (click)="changeStatus('all')"> 
+            All Tasks ({{ countsSignal().all }})
+        </mat-chip>
+        <mat-chip selectable class="filter-chip" [highlighted]="filterSignal() === 'completed'" (click)="changeStatus('completed')"> 
+            Completed ({{ countsSignal().completed }})
+        </mat-chip>
+        <mat-chip selectable class="filter-chip" [highlighted]="filterSignal() === 'active'" (click)="changeStatus('active')"> 
+            Active ({{ countsSignal().active }})
+        </mat-chip>
+    </mat-chip-set>
+</div>

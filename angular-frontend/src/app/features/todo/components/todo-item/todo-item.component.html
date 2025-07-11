@@ -1,0 +1,29 @@
+@if (item) {
+    <div class="todo-item" [ngClass]="{ 'completed': item.completed }">
+        <mat-card class="todo-item__card">
+            <mat-card-content class="todo-item__card-contents">
+                <div class="todo-item__card-content">
+                    <mat-checkbox [labelPosition]="'after'" [(ngModel)]="item.completed" (change)="toggleStatus(item)"></mat-checkbox>
+                    <div class="todo-item__card-content-details">
+                        <div class="todo-item__card-content-title">
+                            <h4>{{ item.title }}</h4>
+                            <span class="todo-item__card-content-badge">{{ item.completed ? 'Completed' : 'Active'}}</span>
+                        </div>
+                        <div class="todo-item__card-content-user">
+                            <mat-icon>person</mat-icon>
+                            <span>{{ item.username }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="todo-item__card-actions">
+                    <button mat-icon-button aria-label="Icon button with pen" (click)="editTodo(item)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button aria-label="Icon button with delete" (click)="deleteTodo(item)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+}

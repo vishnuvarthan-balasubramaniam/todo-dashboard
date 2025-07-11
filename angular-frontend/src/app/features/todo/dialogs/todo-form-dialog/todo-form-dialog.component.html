@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content [formGroup]="todoForm">
+    <mat-form-field class="todo-form-dialog__form-field">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Todo title" />
+    </mat-form-field>
+
+    <mat-form-field class="todo-form-dialog__form-field">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="user">
+            @for (user of data.users; track user.id) {
+                <mat-option [value]="user">{{ user.name }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="completed">Completed</mat-checkbox>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button class="todo-form-dialog__action-button" (click)="save()" [disabled]="todoForm.invalid">
+        {{ isEditMode ? 'Update' : 'Add' }}
+    </button>
+</mat-dialog-actions>

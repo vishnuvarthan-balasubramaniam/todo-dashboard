@@ -1,0 +1,11 @@
+.todo-form-dialog {
+    &__form-field {
+        width: 100%;
+    }
+
+    &__action-button:not(:disabled) {
+        background-color: var(--mat-sys-primary);
+        color: var(--mat-sys-surface) !important;
+        padding-inline: 1.5rem !important;
+    }
+}

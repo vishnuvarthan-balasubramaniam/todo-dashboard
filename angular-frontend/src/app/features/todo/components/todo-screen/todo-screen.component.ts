@@ -22,7 +22,7 @@ import { TodoFilter, TodoScreen } from './todo-screen.model';
 import { TodoScreenService } from './todo-screen.service';
 
 @Component({
-    selector: 'app-todo-screen',
+    selector: 'todo-screen',
     templateUrl: './todo-screen.component.html',
     styleUrl: './todo-screen.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,7 +62,7 @@ export class TodoScreenComponent implements OnInit {
         this.todoScreen.set(initState);
 
         this.todoScreenService.loadTodoScreen(initState).subscribe((updated) => {
-            this.todoScreen.set(updated);
+            this.todoScreen.set({ ...updated, loading: false });
         });
     }
 
@@ -75,7 +75,7 @@ export class TodoScreenComponent implements OnInit {
 
     addTodo(todo: TodoItem): void {
         this.todoScreenService.addTodo(this.todoScreen(), todo).subscribe(updated => {
-            this.todoScreen.set(updated);
+            this.todoScreen.set({ ...updated, loading: false });
             this.showMessage('Todo added successfully!');
         });
     }
@@ -91,7 +91,7 @@ export class TodoScreenComponent implements OnInit {
         }).afterClosed().subscribe(confirmed => {
             if (confirmed) {
                 this.todoScreenService.deleteTodo(this.todoScreen(), todo).subscribe(updated => {
-                    this.todoScreen.set(updated);
+                    this.todoScreen.set({ ...updated, loading: false });
                     this.showMessage('Todo deleted successfully!');
                 });
             }
@@ -101,6 +101,7 @@ export class TodoScreenComponent implements OnInit {
 
     editTodo(todo: TodoItem): void {
        this.dialog.open(TodoFormDialogComponent, {
+            height: '350px',
             data: {
                 title: 'Edit Todo',
                 mode: 'edit',
@@ -110,7 +111,7 @@ export class TodoScreenComponent implements OnInit {
         }).afterClosed().subscribe(result => {
             if (result) {
                 this.todoScreenService.editTodo(this.todoScreen(), result).subscribe(updated => {
-                    this.todoScreen.set(updated);
+                    this.todoScreen.set({ ...updated, loading: false });
                     this.showMessage('Todo updated successfully!');
                 });
             }
@@ -119,7 +120,7 @@ export class TodoScreenComponent implements OnInit {
 
     updateTodoStatus(todo: TodoItem): void {
         this.todoScreenService.editTodo(this.todoScreen(), todo).subscribe(updated => {
-            this.todoScreen.set(updated);
+            this.todoScreen.set({ ...updated, loading: false });
             this.showMessage(`Todo marked as ${todo.completed ? 'completed' : 'active'}!`);
         });
     }

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -10,7 +10,7 @@ import { TodoItem } from '../../components/todo-item/todo-item.model';
 import { TodoUser } from '../../components/todo-screen/todo-screen.model';
 
 @Component({
-    selector: 'app-todo-form-dialog',
+    selector: 'todo-form-dialog',
     imports: [
         MatDialogModule, 
         MatFormFieldModule, 
@@ -23,22 +23,15 @@ import { TodoUser } from '../../components/todo-screen/todo-screen.model';
     ],
     templateUrl: './todo-form-dialog.component.html',
     styleUrl: './todo-form-dialog.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoFormDialogComponent implements OnInit {
 
+    private readonly fb = inject(FormBuilder);
+    readonly dialogRef = inject(MatDialogRef<TodoFormDialogComponent>);
+    readonly data = inject<{title: string, mode: 'add' | 'edit', todo?: TodoItem, users: TodoUser[]}>(MAT_DIALOG_DATA);
     todoForm!: FormGroup;
     isEditMode = false;
-
-    constructor(
-        private readonly fb: FormBuilder,
-        public dialogRef: MatDialogRef<TodoFormDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: { 
-            title: string, 
-            mode: 'add' | 'edit'; 
-            todo?: TodoItem, 
-            users: TodoUser[] 
-        }
-    ) {}
 
 
     ngOnInit(): void {

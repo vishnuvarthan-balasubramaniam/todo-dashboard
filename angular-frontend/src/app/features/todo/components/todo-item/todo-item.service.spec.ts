@@ -20,32 +20,32 @@ describe('TodoItemService', () => {
     it('should map Todo and matching user to TodoItem', () => {
         const mockTodo: Todo = TodoItemSample.getTodo();
         const mockUsers: TodoUser[] = TodoItemSample.getUsers();
-
         const result = service.mapTodo(mockTodo, mockUsers);
+
         expect(TodoItemSample.getTodoItem()).toEqual(result);
     });
 
     it('should set empty username if user is not found', () => {
       const mockTodoWithNoUser: Todo = TodoItemSample.getTodoWithNoUser();
       const mockUsers: TodoUser[] = TodoItemSample.getUsers();
-
       const result = service.mapTodo(mockTodoWithNoUser, mockUsers);
+
       expect(result.username).toBe('');
     });
 
     it('shoud set empty string when users not available', () => {
         const mockTodo: Todo = TodoItemSample.getTodo();
         const mockUsers = undefined;
-
         const result = service.mapTodo(mockTodo, mockUsers);
+
         expect(result.username).toBe('');
     })
 
     it('should map list of Todos to TodoItems', () => {
         const mockTodos: Todo[] = TodoItemSample.getTodos();
         const mockUsers: TodoUser[] = TodoItemSample.getUsers();
-
         const result = service.mapTodos(mockTodos, mockUsers);
+        
         expect(TodoItemSample.getTodoItems()).toEqual(result);
     });
 });

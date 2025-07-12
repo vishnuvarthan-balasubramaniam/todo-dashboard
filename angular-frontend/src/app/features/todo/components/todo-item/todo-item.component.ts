@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { TodoItem } from './todo-item.model';
 
 @Component({
-    selector: 'app-todo-item',
+    selector: 'todo-item',
     imports: [CommonModule, FormsModule, MatButtonModule, MatCardModule, MatIconModule, MatCheckboxModule],
     templateUrl: './todo-item.component.html',
     styleUrl: './todo-item.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoItemComponent {
     @Input() item!: TodoItem;

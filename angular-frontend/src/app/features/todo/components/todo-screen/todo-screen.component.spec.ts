@@ -43,52 +43,40 @@ describe('TodoScreenComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should compute filteredTodos correctly for completed', () => {
+    it('should compute filteredTodos for completed', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
+        component.todoScreen.update(state => ({ ...state, filter: 'completed' }));
+        const filteredTodos = component.filteredTodos();
 
-        component.todoScreen.update(state => ({
-            ...state,
-            filter: 'completed'
-        }));
-
-        const completedTodos = component.filteredTodos();
-        expect(completedTodos.length).toBe(1);
-        expect(completedTodos[0].completed).toBeTrue();
+        expect(filteredTodos.length).toBe(1);
+        expect(filteredTodos[0].completed).toBeTrue();
     });
 
-    it('should compute filteredTodos correctly for active', () => {
+    it('should compute filteredTodos for active', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
+        component.todoScreen.update(state => ({ ...state, filter: 'active' }));
+        const filteredTodos = component.filteredTodos();
 
-        component.todoScreen.update(state => ({
-            ...state,
-            filter: 'active'
-        }));
-
-        const activeTodos = component.filteredTodos();
-        expect(activeTodos.length).toBe(1);
-        expect(activeTodos[0].completed).toBeFalse();
+        expect(filteredTodos.length).toBe(1);
+        expect(filteredTodos[0].completed).toBeFalse();
     });
 
-    it('should compute filteredTodos correctly for active', () => {
+    it('should compute filteredTodos for active', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
-
-        component.todoScreen.update(state => ({
-            ...state,
-            filter: 'all'
-        }));
+        component.todoScreen.update(state => ({ ...state, filter: 'all' }));
 
         const filteredTodos = component.filteredTodos();
         expect(filteredTodos.length).toBe(2);
     });
 
-    it('should compute todoCounts correctly', () => {
+    it('should compute todoCounts', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
-
         const counts = component.todoCounts();
+
         expect(counts.all).toBe(2);
         expect(counts.completed).toBe(1);
         expect(counts.active).toBe(1);
@@ -106,57 +94,47 @@ describe('TodoScreenComponent', () => {
         expect(mockService.loadTodoScreen).toHaveBeenCalledWith(mockInitState);
     });
 
-    it('should update filter on filterChange', () => {
-        const patch = TodoScreenSample.getToolbarForCompleted();
+    it('should update filter on filterChange(status)', () => {
+        const status = TodoScreenSample.getToolbarForCompleted();
 
         component.todoScreen.set(TodoScreenSample.getInitialState());
-
-        component.filterChange(patch);
+        component.filterChange(status);
 
         expect(component.todoScreen().filter).toBe('completed');
     });
 
     it('should call addTodo and update signal', () => {
         const updatedState = TodoScreenSample.getInitialState();
-        const todo = updatedState.todoItems[0];
+        const updatedTodo = updatedState.todoItems[0];
 
         component.todoScreen.set(updatedState);
         mockService.addTodo.and.returnValue(of(updatedState));
+        component.addTodo(updatedTodo);
 
-        component.addTodo(todo);
-
-        expect(mockService.addTodo).toHaveBeenCalledWith(component.todoScreen(), todo);
+        expect(mockService.addTodo).toHaveBeenCalledWith(component.todoScreen(), updatedTodo);
     });
 
     it('should call deleteTodo after confirmation', () => {
         const updatedState = TodoScreenSample.getInitialState();
-        const todo = updatedState.todoItems[0];
+        const updatedTodo = updatedState.todoItems[0];
 
-        mockDialog.open.and.returnValue({
-        afterClosed: () => of(true)
-        } as any);
-
+        mockDialog.open.and.returnValue({ afterClosed: () => of(true) } as any);
         mockService.deleteTodo.and.returnValue(of(updatedState));
-
         component.todoScreen.set(updatedState);
-        component.deleteTodo(todo);
+        component.deleteTodo(updatedTodo);
 
-        expect(mockService.deleteTodo).toHaveBeenCalledWith(component.todoScreen(), todo);
+        expect(mockService.deleteTodo).toHaveBeenCalledWith(component.todoScreen(), updatedTodo);
     });
 
-    it('should call editTodo after dialog result', () => {
+    it('should call editTodo after form dialog confirmation', () => {
         const updatedState = TodoScreenSample.getInitialState();
-        const todo = updatedState.todoItems[0];
+        const updatedTodo = updatedState.todoItems[0];
 
-        mockDialog.open.and.returnValue({
-        afterClosed: () => of(todo)
-        } as any);
-
+        mockDialog.open.and.returnValue({ afterClosed: () => of(updatedTodo) } as any);
         mockService.editTodo.and.returnValue(of(updatedState));
-
         component.todoScreen.set(updatedState);
-        component.editTodo(todo);
+        component.editTodo(updatedTodo);
 
-        expect(mockService.editTodo).toHaveBeenCalledWith(component.todoScreen(), todo);
+        expect(mockService.editTodo).toHaveBeenCalledWith(component.todoScreen(), updatedTodo);
     });
 });

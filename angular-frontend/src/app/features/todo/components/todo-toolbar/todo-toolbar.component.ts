@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal, Signal, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal, Signal, SimpleChanges } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -12,7 +12,7 @@ import { TodoItem } from '../todo-item/todo-item.model';
 import { TodoFilter, TodoUser } from '../todo-screen/todo-screen.model';
 
 @Component({
-    selector: 'app-todo-toolbar',
+    selector: 'todo-toolbar',
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -26,7 +26,7 @@ import { TodoFilter, TodoUser } from '../todo-screen/todo-screen.model';
     templateUrl: './todo-toolbar.component.html',
     styleUrl: './todo-toolbar.component.scss',
 })
-export class TodoToolbarComponent implements OnInit {
+export class TodoToolbarComponent implements OnInit, OnChanges {
     @Input() users!: TodoUser[];
     @Input() filter!: TodoFilter;
     @Input() counts: { all: number; completed: number; active: number } = {
@@ -38,11 +38,11 @@ export class TodoToolbarComponent implements OnInit {
     @Output() filterChange = new EventEmitter<TodoFilter>();
     @Output() addTodoChange = new EventEmitter<TodoItem>();
 
+    private readonly dialog = inject(MatDialog);
+
     usersSignal: Signal<TodoUser[]> = signal([]);
     countsSignal = signal(this.counts);
     filterSignal = signal<TodoFilter>('all');
-
-    constructor(private readonly dialog: MatDialog) {}
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['counts']) {
@@ -51,7 +51,7 @@ export class TodoToolbarComponent implements OnInit {
         if (changes['filter']) {
             this.filterSignal.set(this.filter);
         }
-  }
+    }
 
     ngOnInit(): void {
         this.filterSignal.set(this.filter);
@@ -65,7 +65,7 @@ export class TodoToolbarComponent implements OnInit {
 
     addTodo(): void {
         this.dialog.open(TodoFormDialogComponent, {
-            height: '350',
+            height: '350px',
             data: {
                 title: 'Add Todo',
                 mode: 'add',

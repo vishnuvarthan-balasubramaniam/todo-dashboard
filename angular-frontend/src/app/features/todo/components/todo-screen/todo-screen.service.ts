@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { forkJoin, map, Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 import { TodoService } from '../../../../domain/todo/todo.service';
 import { User } from '../../../../domain/user/user.model';
 import { UserService } from '../../../../domain/user/user.service';
@@ -13,11 +13,9 @@ import { TodoScreen, TodoUser } from './todo-screen.model';
     providedIn: 'root',
 })
 export class TodoScreenService {
-    constructor(
-        private readonly todoService: TodoService,
-        private readonly userService: UserService,
-        private readonly todoItemService: TodoItemService
-    ) {}
+    private readonly todoService = inject(TodoService);
+    private readonly userService = inject(UserService);
+    private readonly todoItemService = inject(TodoItemService);
 
     initTodoScreen(currentState: TodoScreen): TodoScreen {
         return {
@@ -40,10 +38,18 @@ export class TodoScreenService {
 
                 return {
                     ...currentState,
-                    loading: false,
                     todoItems: mappedTodos,
                     users: mappedUsers,
                 }
+            }),
+            catchError(error => {
+                console.error('Failed to load todo screen:', error);
+                return of({
+                    ...currentState,
+                    loading: false,
+                    todoItems: [],
+                    users: [],
+                });
             })
         );
     }
@@ -60,8 +66,13 @@ export class TodoScreenService {
                 const mappedTodoItem = this.todoItemService.mapTodo(res, currentState.users);
                 return {
                     ...currentState,
+                    loading: false,
                     todoItems: [mappedTodoItem, ...currentState.todoItems]
                 }
+            }),
+            catchError(error => {
+                console.error('Failed to add todo:', error);
+                return of({ ...currentState, loading: false });
             })
         )
     }
@@ -73,10 +84,15 @@ export class TodoScreenService {
                     const updatedTodos = currentState.todoItems.filter(item => item.id !== todo.id);
                     return {
                         ...currentState,
+                        loading: false,
                         todoItems: updatedTodos
                     }
                 }
                 return currentState;
+            }),
+            catchError(error => {
+                console.error('Failed to delete todo:', error);
+                return of({ ...currentState, loading: false });
             })
         )
     }
@@ -94,8 +110,13 @@ export class TodoScreenService {
                 const updatedTodos = currentState.todoItems.map(item => item.id === res.id ? updatedItem : item);
                 return {
                     ...currentState,
+                    loading: false,
                     todoItems: updatedTodos
                 }
+            }),
+            catchError(error => {
+                console.error('Failed to update todo:', error);
+                return of({ ...currentState, loading: false });
             })
         )
     }

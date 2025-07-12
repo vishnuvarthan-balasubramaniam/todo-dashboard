@@ -7,8 +7,7 @@ import { TodoItem } from './todo-item.model';
     providedIn: 'root',
 })
 export class TodoItemService {
-    constructor() {}
-
+    
     mapTodos(todos: Todo[], users: TodoUser[]): TodoItem[] {
         return todos.map((todo) => this.mapTodo(todo, users));
     }

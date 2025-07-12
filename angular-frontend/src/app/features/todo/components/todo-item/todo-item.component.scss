@@ -1,5 +1,7 @@
 .todo-item__card {
     margin-bottom: 0.5rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
 
     &-contents {
         display: flex;
@@ -28,6 +30,7 @@
             padding: 0.25rem 0.5rem;
             border-radius: 2rem;
             font-size: 0.75rem;
+            width: fit-content;
         }
 
         &-user {
@@ -52,5 +55,22 @@
 .completed {
     h4 {
         text-decoration: line-through;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .todo-item__card {
+        &-content {
+            &-title {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            &-user {
+                margin-top: 0.25rem;
+            }
+        }
+        &-actions {
+            gap: 0;
+        }
     }
 }

@@ -1,19 +1,24 @@
-
-    <app-todo-toolbar 
+<div class="todo-wrapper">
+    @if (todoScreen().loading) {
+        <div class="loader-overlay">
+            <mat-spinner [diameter]="50"></mat-spinner>
+        </div>
+    }
+    @else {
+        <todo-toolbar 
                 [users]="todoScreen().users" 
                 [counts]="todoCounts()"
                 [filter]="todoScreen().filter"
                 (addTodoChange)="addTodo($event)"
                 (filterChange)="filterChange($event)">
-    </app-todo-toolbar>
-    <div class="todo-container">
+        </todo-toolbar>
         @for (item of filteredTodos(); track item.id) {
-            <app-todo-item 
+            <todo-item 
                     [item]="item" 
                     (delete)="deleteTodo($event)" 
                     (edit)="editTodo($event)"
                     (toggleTodoChange)="updateTodoStatus($event)">
-            </app-todo-item>
+            </todo-item>
         }
-    </div>
-
+    }
+</div>

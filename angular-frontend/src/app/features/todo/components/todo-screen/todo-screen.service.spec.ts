@@ -19,6 +19,7 @@ describe('TodoScreenService', () => {
         const todoSpy = jasmine.createSpyObj('TodoService', ['getTodos', 'addTodo', 'deleteTodo', 'updateTodo']);
         const userSpy = jasmine.createSpyObj('UserService', ['getUsers']);
         const itemSpy = jasmine.createSpyObj('TodoItemService', ['mapTodos', 'mapTodo']);
+
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(), 
@@ -28,6 +29,7 @@ describe('TodoScreenService', () => {
                 { provide: TodoItemService, useValue: itemSpy }
             ]
         });
+
         service = TestBed.inject(TodoScreenService);
         todoServiceSpy = TestBed.inject(TodoService) as jasmine.SpyObj<TodoService>;
         userServiceSpy = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
@@ -39,17 +41,17 @@ describe('TodoScreenService', () => {
     });
 
     it('should load todos and users', (done) => {
-        const todos = TodoScreenSample.getTodos();
-        const users = TodoScreenSample.getUsers();
-        const mappedTodos = TodoScreenSample.getMappedTodos();
-        const initial = service.initTodoScreen({ loading: false, todoItems: [], users: [], filter: 'all' });
+        const mockTodos = TodoScreenSample.getTodos();
+        const mockUsers = TodoScreenSample.getUsers();
+        const mockMappedTodos = TodoScreenSample.getMappedTodos();
+        const initialState = service.initTodoScreen({ loading: false, todoItems: [], users: [], filter: 'all' });
 
-        userServiceSpy.getUsers.and.returnValue(of(users));
-        todoServiceSpy.getTodos.and.returnValue(of(todos));
-        itemServiceSpy.mapTodos.and.returnValue(mappedTodos);
+        userServiceSpy.getUsers.and.returnValue(of(mockUsers));
+        todoServiceSpy.getTodos.and.returnValue(of(mockTodos));
+        itemServiceSpy.mapTodos.and.returnValue(mockMappedTodos);
 
-        service.loadTodoScreen(initial).subscribe(state => {
-            expect(state.loading).toBeFalse();
+        service.loadTodoScreen(initialState).subscribe(state => {
+            expect(state.loading).toBeTrue();
             expect(state.todoItems.length).toBe(2);
             expect(state.users.length).toBe(1);
             done();
@@ -57,19 +59,12 @@ describe('TodoScreenService', () => {
     });
 
     it('should add a todo', (done) => {
-        const currentState = TodoScreenSample.getInitialState();
-        const newTodo = {
-            id: 3,
-            title: 'New Task',
-            completed: false,
-            userId: 1,
-            username: 'Leanne Graham'
-        };
-        const response = { ...newTodo };
-        todoServiceSpy.addTodo.and.returnValue(of(response));
-        itemServiceSpy.mapTodo.and.returnValue(newTodo);
+        const mockCurrentState = TodoScreenSample.getInitialState();
+        const mockNewTodo = TodoScreenSample.getNewTodo();
+        todoServiceSpy.addTodo.and.returnValue(of({ ...mockNewTodo }));
+        itemServiceSpy.mapTodo.and.returnValue(mockNewTodo);
 
-        service.addTodo(currentState, newTodo).subscribe(updated => {
+        service.addTodo(mockCurrentState, mockNewTodo).subscribe(updated => {
             expect(updated.todoItems.length).toBe(3);
             expect(updated.todoItems[0].title).toBe('New Task');
             done();
@@ -77,11 +72,11 @@ describe('TodoScreenService', () => {
     });
 
     it('should delete a todo', (done) => {
-        const currentState = TodoScreenSample.getInitialState();
-        const todoToDelete = currentState.todoItems[0];
+        const mockCurrentState = TodoScreenSample.getInitialState();
+        const todoToDelete = mockCurrentState.todoItems[0];
         todoServiceSpy.deleteTodo.and.returnValue(of(new HttpResponse({ status: 200 })));
 
-        service.deleteTodo(currentState, todoToDelete).subscribe(updated => {
+        service.deleteTodo(mockCurrentState, todoToDelete).subscribe(updated => {
             expect(updated.todoItems.length).toBe(1);
             expect(updated.todoItems.find(t => t.id === todoToDelete.id)).toBeUndefined();
             done();
@@ -89,11 +84,11 @@ describe('TodoScreenService', () => {
     });
 
     it('should return original todo list when status code is not 200', (done) => {
-        const currentState = TodoScreenSample.getInitialState();
-        const todoToDelete = currentState.todoItems[0];
+        const mockCurrentState = TodoScreenSample.getInitialState();
+        const todoToDelete = mockCurrentState.todoItems[0];
         todoServiceSpy.deleteTodo.and.returnValue(of(new HttpResponse({ status: 0 })));
 
-        service.deleteTodo(currentState, todoToDelete).subscribe(updated => {
+        service.deleteTodo(mockCurrentState, todoToDelete).subscribe(updated => {
             expect(updated.todoItems.length).toBe(2);
             expect(updated.todoItems.find(t => t.id === todoToDelete.id)).toBeDefined();
             done();
@@ -101,12 +96,12 @@ describe('TodoScreenService', () => {
     });
 
   it('should edit a todo', (done) => {
-        const currentState = TodoScreenSample.getInitialState();
-        const edited = { ...currentState.todoItems[0], title: 'Updated Task' };
+        const mockCurrentState = TodoScreenSample.getInitialState();
+        const edited = { ...mockCurrentState.todoItems[0], title: 'Updated Task' };
         todoServiceSpy.updateTodo.and.returnValue(of(edited));
         itemServiceSpy.mapTodo.and.returnValue(edited);
 
-        service.editTodo(currentState, edited).subscribe(updated => {
+        service.editTodo(mockCurrentState, edited).subscribe(updated => {
             expect(updated.todoItems[0].title).toBe('Updated Task');
             done();
         });

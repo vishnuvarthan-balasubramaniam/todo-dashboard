@@ -1,8 +1,13 @@
-mat-dialog-content {
-    font-size: 14px;
-    padding: 10px 0;
+.confirm-dialog__content {
+    font-size: 1rem;
 }
 
-mat-dialog-actions {
-    margin-top: 15px;
+.confirm-dialog__actions {
+    margin-top: 1rem;
+
+    &-button:not(:disabled) {
+        background-color: var(--mat-sys-primary);
+        color: var(--mat-sys-surface) !important;
+        padding-inline: 1.5rem !important;
+    }
 }

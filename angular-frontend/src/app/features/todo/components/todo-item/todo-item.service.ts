@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Todo } from '../../../../domain/todo/todo.model';
+import { Todo } from '@domain/todo/todo.model';
 import { TodoUser } from '../todo-screen/todo-screen.model';
 import { TodoItem } from './todo-item.model';
 

@@ -1,39 +1,35 @@
-import { TestBed } from '@angular/core/testing';
-
 import { HttpResponse, provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { TodoService } from '@domain/todo/todo.service';
+import { UserService } from '@domain/user/user.service';
 import { of } from 'rxjs';
-import { TodoService } from '../../../../domain/todo/todo.service';
-import { UserService } from '../../../../domain/user/user.service';
 import { TodoItemService } from '../todo-item/todo-item.service';
 import { TodoScreenSample } from './todo-screen.sample';
 import { TodoScreenService } from './todo-screen.service';
 
 describe('TodoScreenService', () => {
     let service: TodoScreenService;
-    let todoServiceSpy: jasmine.SpyObj<TodoService>;
-    let userServiceSpy: jasmine.SpyObj<UserService>;
-    let itemServiceSpy: jasmine.SpyObj<TodoItemService>;
+    let todoServiceSpy!: jasmine.SpyObj<TodoService>;
+    let userServiceSpy!: jasmine.SpyObj<UserService>;
+    let itemServiceSpy!: jasmine.SpyObj<TodoItemService>;
 
     beforeEach(() => {
-        const todoSpy = jasmine.createSpyObj('TodoService', ['getTodos', 'addTodo', 'deleteTodo', 'updateTodo']);
-        const userSpy = jasmine.createSpyObj('UserService', ['getUsers']);
-        const itemSpy = jasmine.createSpyObj('TodoItemService', ['mapTodos', 'mapTodo']);
+        todoServiceSpy = jasmine.createSpyObj('TodoService', ['getTodos', 'addTodo', 'deleteTodo', 'updateTodo']);
+        userServiceSpy = jasmine.createSpyObj('UserService', ['getUsers']);
+        itemServiceSpy = jasmine.createSpyObj('TodoItemService', ['mapTodos', 'mapTodo']);
 
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(), 
                 provideHttpClientTesting(),
-                { provide: TodoService, useValue: todoSpy },
-                { provide: UserService, useValue: userSpy },
-                { provide: TodoItemService, useValue: itemSpy }
+                { provide: TodoService, useValue: todoServiceSpy },
+                { provide: UserService, useValue: userServiceSpy },
+                { provide: TodoItemService, useValue: itemServiceSpy }
             ]
         });
 
         service = TestBed.inject(TodoScreenService);
-        todoServiceSpy = TestBed.inject(TodoService) as jasmine.SpyObj<TodoService>;
-        userServiceSpy = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
-        itemServiceSpy = TestBed.inject(TodoItemService) as jasmine.SpyObj<TodoItemService>;
     });
 
     it('should be created', () => {
@@ -66,7 +62,7 @@ describe('TodoScreenService', () => {
 
         service.addTodo(mockCurrentState, mockNewTodo).subscribe(updated => {
             expect(updated.todoItems.length).toBe(3);
-            expect(updated.todoItems[0].title).toBe('New Task');
+            expect(updated.todoItems[0].title).toBe('quis ut nam');
             done();
         });
     });
@@ -78,7 +74,7 @@ describe('TodoScreenService', () => {
 
         service.deleteTodo(mockCurrentState, todoToDelete).subscribe(updated => {
             expect(updated.todoItems.length).toBe(1);
-            expect(updated.todoItems.find(t => t.id === todoToDelete.id)).toBeUndefined();
+            expect(updated.todoItems.find(todo => todo.id === todoToDelete.id)).toBeUndefined();
             done();
         });
     });
@@ -90,18 +86,18 @@ describe('TodoScreenService', () => {
 
         service.deleteTodo(mockCurrentState, todoToDelete).subscribe(updated => {
             expect(updated.todoItems.length).toBe(2);
-            expect(updated.todoItems.find(t => t.id === todoToDelete.id)).toBeDefined();
+            expect(updated.todoItems.find(todo => todo.id === todoToDelete.id)).toBeDefined();
             done();
         });
     });
 
   it('should edit a todo', (done) => {
         const mockCurrentState = TodoScreenSample.getInitialState();
-        const edited = { ...mockCurrentState.todoItems[0], title: 'Updated Task' };
-        todoServiceSpy.updateTodo.and.returnValue(of(edited));
-        itemServiceSpy.mapTodo.and.returnValue(edited);
+        const editedTodo = { ...mockCurrentState.todoItems[0], title: 'Updated Task' };
+        todoServiceSpy.updateTodo.and.returnValue(of(editedTodo));
+        itemServiceSpy.mapTodo.and.returnValue(editedTodo);
 
-        service.editTodo(mockCurrentState, edited).subscribe(updated => {
+        service.editTodo(mockCurrentState, editedTodo).subscribe(updated => {
             expect(updated.todoItems[0].title).toBe('Updated Task');
             done();
         });

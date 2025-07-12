@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Todo } from '../../../../domain/todo/todo.model';
+import { Todo } from '@domain/todo/todo.model';
 import { TodoUser } from '../todo-screen/todo-screen.model';
 import { TodoItemSample } from './todo-item.sample';
 import { TodoItemService } from './todo-item.service';

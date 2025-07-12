@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { of } from "rxjs";
 import { TodoItem } from "../todo-item/todo-item.model";

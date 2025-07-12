@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal, Signal, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal, Signal, SimpleChanges } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -25,6 +25,7 @@ import { TodoFilter, TodoUser } from '../todo-screen/todo-screen.model';
     ],
     templateUrl: './todo-toolbar.component.html',
     styleUrl: './todo-toolbar.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodoToolbarComponent implements OnInit, OnChanges {
     @Input() users!: TodoUser[];

@@ -14,7 +14,6 @@ describe('TodoScreenComponent', () => {
     let mockService: jasmine.SpyObj<TodoScreenService>;
     let mockDialog: jasmine.SpyObj<MatDialog>;
 
-
     beforeEach(async () => {
         mockService = jasmine.createSpyObj<TodoScreenService>('TodoScreenService', [
             'initTodoScreen',
@@ -43,7 +42,7 @@ describe('TodoScreenComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should compute filteredTodos for completed', () => {
+    it('should compute filteredTodos signal for completed', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
         component.todoScreen.update(state => ({ ...state, filter: 'completed' }));
@@ -53,7 +52,7 @@ describe('TodoScreenComponent', () => {
         expect(filteredTodos[0].completed).toBeTrue();
     });
 
-    it('should compute filteredTodos for active', () => {
+    it('should compute filteredTodos signal for active', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
         component.todoScreen.update(state => ({ ...state, filter: 'active' }));
@@ -63,7 +62,7 @@ describe('TodoScreenComponent', () => {
         expect(filteredTodos[0].completed).toBeFalse();
     });
 
-    it('should compute filteredTodos for active', () => {
+    it('should compute filteredTodos signal for active', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
         component.todoScreen.update(state => ({ ...state, filter: 'all' }));
@@ -72,7 +71,7 @@ describe('TodoScreenComponent', () => {
         expect(filteredTodos.length).toBe(2);
     });
 
-    it('should compute todoCounts', () => {
+    it('should compute todoCounts signal', () => {
         const mockState = TodoScreenSample.getInitialState();
         component.todoScreen.set(mockState);
         const counts = component.todoCounts();

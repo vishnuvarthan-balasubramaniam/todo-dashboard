@@ -56,7 +56,7 @@ export class TodoScreenSample {
     static getNewTodo(): TodoItem {
         return {
             id: 3,
-            title: 'New Task',
+            title: 'quis ut nam',
             completed: false,
             userId: 1,
             username: 'Leanne Graham'

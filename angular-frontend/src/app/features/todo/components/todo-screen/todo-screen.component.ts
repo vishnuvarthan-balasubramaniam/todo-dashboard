@@ -13,7 +13,7 @@ import {
     MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { ConfirmDialogComponent } from '../../../../shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { TodoFormDialogComponent } from '../../dialogs/todo-form-dialog/todo-form-dialog.component';
 import { TodoItemComponent } from '../todo-item/todo-item.component';
 import { TodoItem } from '../todo-item/todo-item.model';
@@ -23,10 +23,10 @@ import { TodoScreenService } from './todo-screen.service';
 
 @Component({
     selector: 'todo-screen',
+    imports: [TodoToolbarComponent, TodoItemComponent, MatProgressSpinnerModule],
     templateUrl: './todo-screen.component.html',
     styleUrl: './todo-screen.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TodoToolbarComponent, TodoItemComponent, MatProgressSpinnerModule],
 })
 export class TodoScreenComponent implements OnInit {
     private readonly todoScreenService = inject(TodoScreenService);

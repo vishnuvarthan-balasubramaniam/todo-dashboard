@@ -1,11 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Todo } from '@domain/todo/todo.model';
+import { TodoService } from '@domain/todo/todo.service';
+import { User } from '@domain/user/user.model';
+import { UserService } from '@domain/user/user.service';
 import { catchError, forkJoin, map, Observable, of } from 'rxjs';
-import { TodoService } from '../../../../domain/todo/todo.service';
-import { User } from '../../../../domain/user/user.model';
-import { UserService } from '../../../../domain/user/user.service';
 import { TodoItem } from '../todo-item/todo-item.model';
-import { Todo } from './../../../../domain/todo/todo.model';
 import { TodoItemService } from './../todo-item/todo-item.service';
 import { TodoScreen, TodoUser } from './todo-screen.model';
 
@@ -62,8 +62,8 @@ export class TodoScreenService {
             completed: todo.completed
         }
         return this.todoService.addTodo(newTodo).pipe(
-            map((res: Todo) => {
-                const mappedTodoItem = this.todoItemService.mapTodo(res, currentState.users);
+            map((addedTodo: Todo) => {
+                const mappedTodoItem = this.todoItemService.mapTodo(addedTodo, currentState.users);
                 return {
                     ...currentState,
                     loading: false,
@@ -79,8 +79,8 @@ export class TodoScreenService {
 
     deleteTodo(currentState: TodoScreen, todo: TodoItem): Observable<TodoScreen> {
         return this.todoService.deleteTodo(todo).pipe(
-            map((res: HttpResponse<any>) => {
-                if (res.status === 200) {
+            map((response: HttpResponse<any>) => {
+                if (response.status === 200) {
                     const updatedTodos = currentState.todoItems.filter(item => item.id !== todo.id);
                     return {
                         ...currentState,
@@ -105,9 +105,9 @@ export class TodoScreenService {
             completed: todo.completed
         }
         return this.todoService.updateTodo(editedTodo).pipe(
-            map((res: Todo) => {
-                const updatedItem = this.todoItemService.mapTodo(res, currentState.users);
-                const updatedTodos = currentState.todoItems.map(item => item.id === res.id ? updatedItem : item);
+            map((updatedTodo: Todo) => {
+                const updatedItem = this.todoItemService.mapTodo(updatedTodo, currentState.users);
+                const updatedTodos = currentState.todoItems.map(item => item.id === updatedTodo.id ? updatedItem : item);
                 return {
                     ...currentState,
                     loading: false,

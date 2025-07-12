@@ -30,6 +30,7 @@ export class TodoFormDialogComponent implements OnInit {
     private readonly fb = inject(FormBuilder);
     readonly dialogRef = inject(MatDialogRef<TodoFormDialogComponent>);
     readonly data = inject<{title: string, mode: 'add' | 'edit', todo?: TodoItem, users: TodoUser[]}>(MAT_DIALOG_DATA);
+    
     todoForm!: FormGroup;
     isEditMode = false;
 
